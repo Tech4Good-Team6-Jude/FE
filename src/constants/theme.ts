@@ -1,26 +1,23 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-import '@/global.css';
-
 import { Platform } from 'react-native';
 
+/**
+ * @deprecated 새 UI의 디자인 토큰은 tailwind.config.js와 NativeWind className을 사용합니다.
+ * 이 값들은 아직 이전 템플릿 컴포넌트가 참조하는 호환 레이어입니다.
+ */
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: '#191F28',
+    background: '#FFFFFF',
+    backgroundElement: '#F9FAFB',
+    backgroundSelected: '#FFF3E0',
+    textSecondary: '#6B7684',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#FFFFFF',
+    background: '#191F28',
+    backgroundElement: '#4E5968',
+    backgroundSelected: '#E36F00',
+    textSecondary: '#B0B8C1',
   },
 } as const;
 
@@ -28,13 +25,9 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
@@ -44,13 +37,14 @@ export const Fonts = Platform.select({
     mono: 'monospace',
   },
   web: {
-    sans: 'var(--font-display)',
+    sans: 'system-ui',
     serif: 'var(--font-serif)',
     rounded: 'var(--font-rounded)',
     mono: 'var(--font-mono)',
   },
 });
 
+/** @deprecated 새 UI에서는 p-xs, gap-md 등 Tailwind spacing 유틸리티를 사용합니다. */
 export const Spacing = {
   half: 2,
   one: 4,
