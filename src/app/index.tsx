@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
 const roles = [
   {
@@ -22,7 +23,14 @@ const roles = [
 type RoleId = (typeof roles)[number]['id'];
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<RoleId | null>(null);
+
+  const handleStart = () => {
+    if (selectedRole === 'guardian') {
+      router.push('/parent_report');
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -92,6 +100,7 @@ export default function HomeScreen() {
           <Pressable
             accessibilityRole="button"
             disabled={!selectedRole}
+            onPress={handleStart}
             className={`items-center rounded-lg py-lg ${selectedRole ? 'bg-primary' : 'bg-gray-200'}`}>
             <Text className={`font-sans text-body font-bold ${selectedRole ? 'text-white' : 'text-gray-500'}`}>
               선택하고 시작하기

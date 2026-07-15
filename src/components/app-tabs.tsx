@@ -8,8 +8,7 @@ export default function AppTabs() {
   const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
 
   return (
-    <NativeT
-    abs
+    <NativeTabs
       backgroundColor={colors.background}
       indicatorColor={colors.backgroundElement}
       labelStyle={{ selected: { color: colors.text } }}>
