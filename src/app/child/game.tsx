@@ -1,5 +1,5 @@
-import GameLearningScreen from '@/app/game_learning';
+import { ChildGameScreen } from '@/features/child/game/components/child-game-screen';
 
-export default function GameScreen() {
-  return <GameLearningScreen />;
+export default function GameRoute() {
+  return <ChildGameScreen />;
 }
