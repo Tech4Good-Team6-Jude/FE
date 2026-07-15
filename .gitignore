@@ -41,3 +41,22 @@ example
 # generated native folders
 /ios
 /android
+# Codex local workspace
+.codex/
+.codex-plans/
+
+# local editor and test output
+.idea/
+*.log
+coverage/
+*.swp
+*.swo
+
+# environment secrets
+.env
+.env.*
+!.env.example
+
+# additional signing credentials
+*.keystore
+*.der
