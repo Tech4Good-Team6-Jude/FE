@@ -38,6 +38,9 @@ module.exports = {
           beak: '#FF8A00',
           blush: '#FF9E7A',
         },
+        surface: {
+          canvas: '#FFFAF2',
+        },
       },
       spacing: {
         xs: '4px',
@@ -55,7 +58,7 @@ module.exports = {
         '2xl': '24px',
       },
       boxShadow: {
-        card: '0 2px 10px rgb(25 31 40 / 10%)',
+        card: '0 4px 10px rgb(114 94 75 / 10%)',
         floating: '0 6px 16px rgb(25 31 40 / 16%)',
         glow: '0 0 15px rgb(255 138 0 / 30%)',
       },
@@ -63,6 +66,11 @@ module.exports = {
         sans: 'Pretendard',
       },
       fontSize: {
+        'home-hero': ['46px', { lineHeight: '56px', letterSpacing: '-1px' }],
+        'home-greeting': ['27px', { lineHeight: '36px', letterSpacing: '-0.4px' }],
+        'feature-title': ['26px', { lineHeight: '34px', letterSpacing: '-0.4px' }],
+        'feature-description': ['20px', { lineHeight: '28px', letterSpacing: '-0.2px' }],
+        'feature-action': ['20px', { lineHeight: '28px' }],
         display: ['28px', { lineHeight: '36px', letterSpacing: '-0.6px' }],
         title: ['22px', { lineHeight: '30px', letterSpacing: '-0.4px' }],
         heading: ['19px', { lineHeight: '28px', letterSpacing: '-0.3px' }],

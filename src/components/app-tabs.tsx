@@ -14,12 +14,12 @@ export default function AppTabs() {
       labelStyle={{ selected: { color: colors.text } }}>
       <NativeTabs.Trigger name="index">
         <Label>읽기</Label>
-        <Icon src={require('@/assets/images/tabIcons/home.png')} />
+        <Icon src={require('@/assets/images/navigation/tabs/home.png')} />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="explore">
         <Label>훈련</Label>
-        <Icon src={require('@/assets/images/tabIcons/explore.png')} />
+        <Icon src={require('@/assets/images/navigation/tabs/explore.png')} />
       </NativeTabs.Trigger>
     </NativeTabs>
   );
