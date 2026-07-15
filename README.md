@@ -1,56 +1,126 @@
-# Welcome to your Expo app 👋
+# 또박또박 | 2026 TECH4GOOD HACKERTON
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> 2026 TECH4GOOD HACKERTON · 소리로 트고, 훈련으로 굳힌다.
 
-## Get started
+**또박또박**은 읽기 어려움을 겪는 사용자가 오늘의 글을 더 편하게 읽고, 짧은 훈련을 통해 읽기 기초 역량을 쌓도록 돕는 해커톤 MVP입니다. 이 서비스는 의료적 진단이나 치료를 대체하지 않습니다.
 
-1. Install dependencies
+## 문제와 접근
 
-   ```bash
-   npm install
-   ```
+읽기 어려움은 개인마다 양상이 다르며, 음운 처리·해독·유창성과 같은 기초 읽기 요소에서 어려움이 나타날 수 있습니다. 또박또박은 다음 두 축을 함께 제공합니다.
 
-2. Start the app
+1. **즉시 보조** — 사진, PDF, 웹 텍스트를 쉬운 문장으로 정리하고 TTS 낭독과 단어 하이라이트를 제공해 지금 읽어야 하는 글을 돕습니다.
+2. **적응형 훈련** — 짧은 진단을 바탕으로 음운 인식 → 해독 → 유창성 순서의 개인화된 연습을 제안합니다.
 
-   ```bash
-   npx expo start
-   ```
+## 해커톤 MVP
 
-In the output, you'll find options to open the app in a
+### A. 바로 읽기 도우미
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- 사진·PDF·텍스트 입력
+- 쉬운 문장 재구성
+- TTS 낭독과 읽는 단어 동시 하이라이트
+- 자간·행간·청크 단위 읽기 설정
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### B. 오늘의 맞춤 훈련
 
-## Get a fresh project
+- 3분 읽기 진단 5문항
+- 오류 유형에 맞춘 지문·문제 1세트
+- 소리 내어 읽기 1회 채점 및 피드백
+- 연속 학습과 레벨 진행 표시
 
-When you're ready, run:
+## 근거를 반영한 설계
+
+- 기초 읽기 지도는 말소리 단위 인식, 글자-소리 연결, 해독, 연결된 텍스트 읽기를 체계적으로 다루는 방향을 반영합니다.
+- TTS와 읽어주기 도구는 읽기 어려움이 있는 학습자의 독해를 보조할 가능성을 보여 준 연구가 있으며, 사용성은 읽기 속도·문서 구조·동적 하이라이트 같은 요소의 영향을 받습니다.
+- 앱의 보조 기능은 접근성을 위한 지원 도구이며, 난독증을 진단하거나 전문 치료를 대체한다고 주장하지 않습니다.
+
+참고: [IES Foundational Skills Practice Guide](https://ies.ed.gov/ncee/wwc/PracticeGuide/21/Published), [TTS 및 읽어주기 도구 메타분석](https://pmc.ncbi.nlm.nih.gov/articles/PMC5494021/), [난독증 정의와 음운 처리 논의](https://pmc.ncbi.nlm.nih.gov/articles/PMC12198935/)
+
+## 실행
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Expo 개발 서버가 실행되면 Android, iOS 또는 웹에서 열 수 있습니다.
 
-### Other setup steps
+## 프로젝트 구조
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```text
+src/
+├── app/
+│   ├── _layout.tsx      # 앱 레이아웃과 스플래시
+│   ├── index.tsx        # 바로 읽기 도우미 홈
+│   └── explore.tsx      # 맞춤 훈련 화면
+├── components/          # 공용 UI와 탭
+├── constants/           # 색상·간격 토큰
+└── hooks/               # 테마 훅
+```
 
-## Learn more
+## 브랜치, 커밋, PR 컨벤션
 
-To learn more about developing your project with Expo, look at the following resources:
+### 브랜치 전략
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```text
+main       프로덕션/릴리즈 브랜치
+develop    개발 통합 브랜치
+작업 브랜치  이슈 단위 작업 브랜치
+```
 
-## Join the community
+일반 기능, 수정, 문서, 설정 작업은 `develop`을 기준으로 브랜치를 만들고 PR을 보냅니다. `main` 머지는 릴리즈 또는 배포 시점에 진행합니다.
 
-Join our community of developers creating universal apps.
+### 브랜치 네이밍
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```text
+{type}#{issue-number}/{task-name}
+```
+
+예시:
+
+```bash
+feat#12/reader-highlight
+fix#15/android-tabs
+chore#1/github-templates
+```
+
+### 커밋 메시지
+
+```text
+{type}/#{issue-number}: {작업 요약}
+```
+
+예시:
+
+```bash
+git commit -m "feat/#12: 읽기 도우미 화면 추가"
+git commit -m "fix/#15: Android 탭 렌더링 오류 수정"
+git commit -m "docs/#3: README 업데이트"
+```
+
+Type은 다음 기준으로 사용합니다.
+
+| Type     | 의미                                                    |
+| -------- | ------------------------------------------------------- |
+| feat     | 새로운 기능 추가                                        |
+| fix      | 버그 수정                                               |
+| docs     | 문서 수정                                               |
+| style    | 코드 포맷, 세미콜론, 공백 등 동작 변화 없는 스타일 정리 |
+| refactor | 기능 변화 없는 코드 구조 개선                           |
+| test     | 테스트 추가 또는 수정                                   |
+| chore    | 설정, 패키지, 빌드, 레포 관리                           |
+| design   | UI 스타일링, 레이아웃, 디자인 수정                      |
+
+### PR 컨벤션
+
+PR 제목은 커밋 메시지와 같은 형식을 사용합니다.
+
+```text
+{type}/#{issue-number}: {작업 요약}
+```
+
+PR 작성 시에는 PR 템플릿을 따르고 다음 내용을 명확히 남깁니다.
+
+- 간단 설명
+- 관련 이슈
+- 작업 내용
+- 확인 사항
