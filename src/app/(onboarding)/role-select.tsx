@@ -25,7 +25,14 @@ type RoleId = (typeof roles)[number]['id'];
 export default function RoleSelectScreen() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<RoleId | null>(null);
-  const isChildSelected = selectedRole === 'child';
+
+  const handleStart = () => {
+    if (selectedRole === 'child') {
+      router.replace('/child');
+    } else if (selectedRole === 'guardian') {
+      router.push('/parent_report');
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -94,11 +101,11 @@ export default function RoleSelectScreen() {
         <View className="mt-auto pt-xl">
           <Pressable
             accessibilityRole="button"
-            disabled={!isChildSelected}
-            className={`items-center rounded-lg py-lg ${isChildSelected ? 'bg-primary' : 'bg-gray-200'}`}
-            onPress={() => router.replace('/child')}>
-            <Text className={`font-sans text-body font-bold ${isChildSelected ? 'text-white' : 'text-gray-500'}`}>
-              {selectedRole === 'guardian' ? '부모 서비스는 준비 중이에요' : '선택하고 시작하기'}
+            disabled={!selectedRole}
+            className={`items-center rounded-lg py-lg ${selectedRole ? 'bg-primary' : 'bg-gray-200'}`}
+            onPress={handleStart}>
+            <Text className={`font-sans text-body font-bold ${selectedRole ? 'text-white' : 'text-gray-500'}`}>
+              선택하고 시작하기
             </Text>
           </Pressable>
           <Text className="mt-md text-center font-sans text-caption text-gray-500">
