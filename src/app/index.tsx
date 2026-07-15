@@ -27,7 +27,9 @@ export default function HomeScreen() {
   const [selectedRole, setSelectedRole] = useState<RoleId | null>(null);
 
   const handleStart = () => {
-    if (selectedRole === 'guardian') {
+    if (selectedRole === 'child') {
+      router.push('/game_learning');
+    } else if (selectedRole === 'guardian') {
       router.push('/parent_report');
     }
   };
