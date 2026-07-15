@@ -1,12 +1,16 @@
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 import type { ChildGame } from '@/features/child/game/data/game.mock';
 
 export function GameCard({ game }: { game: ChildGame }) {
+  const router = useRouter();
+
   return (
     <Pressable
       accessibilityRole="button"
+      onPress={game.href ? () => router.push(game.href!) : undefined}
       className="w-[344px] items-center rounded-[38px] bg-white pb-[42px] shadow-glow">
       <Image style={{ width: 341, height: 227, marginTop: 54 }} source={game.image} contentFit="contain" />
 

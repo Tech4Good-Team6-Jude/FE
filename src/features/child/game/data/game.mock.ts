@@ -4,6 +4,7 @@ export type ChildGame = {
   description: string;
   duration: string;
   image: number;
+  href?: '/child/game/match';
 };
 
 export const childGames: ChildGame[] = [
@@ -13,6 +14,7 @@ export const childGames: ChildGame[] = [
     description: '소리와 글자를 짝지어요',
     duration: '5분',
     image: require('@/assets/images/img_game_photo.png'),
+    href: '/child/game/match',
   },
   {
     id: 'pattern',
