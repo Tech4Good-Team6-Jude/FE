@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   statusLabel: { color: '#4C816A', fontSize: 12, fontWeight: '700' },
   statusTitle: { color: '#215844', fontSize: 17, fontWeight: '800', marginTop: 5 },
   statusProgress: { color: '#286E54', backgroundColor: '#FFFFFF', borderRadius: 13, paddingHorizontal: 10, paddingVertical: 6, fontSize: 13, fontWeight: '800' },
-  questionCard: { backgroundColor: '#FFFFFF', borderRadius: 26, marginTop: 18, padding: 22, shadowColor: '#285042', shadowOpacity: 0.06, shadowRadius: 15, elevation: 2 },
+  questionCard: { backgroundColor: '#FFFFFF', borderRadius: 26, boxShadow: '0 4px 15px rgba(40, 80, 66, 0.06)', marginTop: 18, padding: 22 },
   questionLabel: { color: '#5C8D77', fontSize: 13, fontWeight: '800' },
   question: { color: '#233A31', fontSize: 44, fontWeight: '800', letterSpacing: 5, marginTop: 24, textAlign: 'center' },
   questionPrompt: { color: '#737C78', fontSize: 14, marginTop: 18, textAlign: 'center' },
