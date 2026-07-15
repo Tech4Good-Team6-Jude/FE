@@ -20,7 +20,7 @@ export function ChildHomeHero({ userName, stats }: ChildHomeHeroProps) {
       <ChildHomeHeader userName={userName} />
 
       <View className="mt-lg items-center md:mt-0 md:h-full md:w-[30%] md:justify-end">
-        <View className="md:-mb-[18px]">
+        <View className="-translate-x-[20px] md:-mb-[18px]">
           <Image contentFit="contain" source={chickImage} style={{ height: 280, width: 280 }} />
         </View>
       </View>
@@ -34,7 +34,7 @@ export function ChildHomeHero({ userName, stats }: ChildHomeHeroProps) {
             <Image contentFit="contain" source={settingsIcon} style={{ height: 34, width: 34 }} />
           </View>
         </View>
-        <View className="flex-row gap-md">
+        <View className="-translate-y-[10px] flex-row gap-md">
           {stats.map((stat) => (
             <LearningStatCard key={stat.id} stat={stat} />
           ))}

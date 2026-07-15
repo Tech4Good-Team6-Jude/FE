@@ -10,7 +10,7 @@ const cardAssets = {
     badgeText: 'text-primary-dark',
     button: 'bg-primary-dark',
     source: require('@/assets/images/child/game/illustrations/korean-text.svg'),
-    imageStyle: { bottom: 20, height: 201, right: 20, width: 164 },
+    imageStyle: { bottom: 44, height: 201, right: 20, width: 164 },
   },
   library: {
     badge: 'bg-success-bg',

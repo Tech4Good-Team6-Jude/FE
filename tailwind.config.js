@@ -60,6 +60,8 @@ module.exports = {
       boxShadow: {
         card: '0 4px 10px rgb(114 94 75 / 10%)',
         floating: '0 6px 16px rgb(25 31 40 / 16%)',
+        'analysis-card': '0 2px 10px rgb(0 0 0 / 4%)',
+        'analysis-panel': '0 3px 16px rgb(0 0 0 / 5%)',
       },
       fontFamily: {
         sans: 'Pretendard',

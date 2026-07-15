@@ -48,7 +48,7 @@ export const childHomeData = {
       id: 'library',
       badge: '도서관',
       title: '오늘의 책 함께 읽기',
-      description: '책을 읽고 어려운 글자는 같이 천천히 연습해요.',
+      description: '책을 읽고 어려운 글자는\n같이 천천히 연습해요.',
       buttonLabel: '읽으러 가기',
       href: '/child/library',
     },
