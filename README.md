@@ -1,75 +1,178 @@
-# 또박또박 | 2026 TECH4GOOD HACKERTON
+# 또박또박 Frontend
 
-> 2026 TECH4GOOD HACKERTON · 소리로 트고, 훈련으로 굳힌다.
+> 소리로 트고, 훈련으로 굳히다.
 
-**또박또박**은 읽기 어려움을 겪는 사용자가 오늘의 글을 더 편하게 읽고, 짧은 훈련을 통해 읽기 기초 역량을 쌓도록 돕는 해커톤 MVP입니다. 이 서비스는 의료적 진단이나 치료를 대체하지 않습니다.
+또박또박은 읽기에 어려움을 겪는 아이가 자신의 속도로 글을 이해하고 반복해서 연습할 수 있도록 돕는 읽기 학습 서비스입니다.
 
-## 문제와 접근
+---
 
-읽기 어려움은 개인마다 양상이 다르며, 음운 처리·해독·유창성과 같은 기초 읽기 요소에서 어려움이 나타날 수 있습니다. 또박또박은 다음 두 축을 함께 제공합니다.
+## 페이지 구성
 
-1. **즉시 보조** — 사진, PDF, 웹 텍스트를 쉬운 문장으로 정리하고 TTS 낭독과 단어 하이라이트를 제공해 지금 읽어야 하는 글을 돕습니다.
-2. **적응형 훈련** — 짧은 진단을 바탕으로 음운 인식 → 해독 → 유창성 순서의 개인화된 연습을 제안합니다.
+| 경로 | 페이지 | 역할 |
+| --- | --- | --- |
+| `/` | 시작 경로 | 역할 선택 화면으로 이동합니다. |
+| `/role-select` | 역할 선택 | 아이와 보호자 중 사용할 역할을 선택합니다. |
+| `/child` | 아이 홈 | 학습 현황을 보여주고 도서관, 게임, 리워드 화면으로 연결합니다. |
+| `/child/library` | 도서관 | 책 목록을 확인하고 촬영 화면으로 이동합니다. |
+| `/child/library/capture` | 촬영 UI | 예시 책 이미지를 이용해 촬영 인터랙션을 시연하고 분석 화면으로 이동합니다. |
+| `/child/library/analysis` | 문장 분석 | 문장 목록과 이해 보조 내용을 확인하고 학습할 문장을 선택합니다. |
+| `/child/library/practice` | 반복 학습 | 유사 문장과 학습 이력을 확인하며 읽기 연습을 진행합니다. |
+| `/child/library/completion` | 학습 완료 | 학습 결과와 알 부화 진행 상태를 확인합니다. |
+| `/child/game` | 게임 목록 | 이용할 수 있는 읽기 학습 게임을 확인합니다. |
+| `/child/game/match` | 짝 맞추기 | 단어 카드와 소리 아이콘 카드의 짝을 맞춥니다. |
+| `/child/rewards` | 리워드 | 리워드 기능을 위한 기본 화면입니다. |
+| `/parent_report` | 보호자 리포트 | 주간 학습 기록과 읽기 관련 지표를 확인합니다. |
 
-## 해커톤 MVP
+Expo Router의 라우트 그룹은 실제 URL에 포함되지 않습니다.
 
-### A. 바로 읽기 도우미
+---
 
-- 사진·PDF·텍스트 입력
-- 쉬운 문장 재구성
-- TTS 낭독과 읽는 단어 동시 하이라이트
-- 자간·행간·청크 단위 읽기 설정
+## 주요 사용자 흐름
 
-### B. 오늘의 맞춤 훈련
+### 읽기 학습
 
-- 3분 읽기 진단 5문항
-- 오류 유형에 맞춘 지문·문제 1세트
-- 소리 내어 읽기 1회 채점 및 피드백
-- 연속 학습과 레벨 진행 표시
-
-## 근거를 반영한 설계
-
-- 기초 읽기 지도는 말소리 단위 인식, 글자-소리 연결, 해독, 연결된 텍스트 읽기를 체계적으로 다루는 방향을 반영합니다.
-- TTS와 읽어주기 도구는 읽기 어려움이 있는 학습자의 독해를 보조할 가능성을 보여 준 연구가 있으며, 사용성은 읽기 속도·문서 구조·동적 하이라이트 같은 요소의 영향을 받습니다.
-- 앱의 보조 기능은 접근성을 위한 지원 도구이며, 난독증을 진단하거나 전문 치료를 대체한다고 주장하지 않습니다.
-
-참고: [IES Foundational Skills Practice Guide](https://ies.ed.gov/ncee/wwc/PracticeGuide/21/Published), [TTS 및 읽어주기 도구 메타분석](https://pmc.ncbi.nlm.nih.gov/articles/PMC5494021/), [난독증 정의와 음운 처리 논의](https://pmc.ncbi.nlm.nih.gov/articles/PMC12198935/)
-
-## 실행
-
-```bash
-npm install
-npx expo start
+```text
+역할 선택
+→ 아이 홈
+→ 도서관
+→ 촬영 UI
+→ 문장 분석
+→ 반복 학습
+→ 학습 완료
 ```
 
-Expo 개발 서버가 실행되면 Android, iOS 또는 웹에서 열 수 있습니다.
+### 짝 맞추기 게임
+
+```text
+아이 홈
+→ 게임 목록
+→ 짝 맞추기
+```
+
+카드 선택과 정답 판정은 프론트엔드에서 처리합니다. 현재 실제 음성 재생은 연결되어 있지 않습니다.
+
+### 보호자 리포트
+
+```text
+역할 선택
+→ 보호자 리포트
+```
+
+현재 리포트의 학습 기록과 지표는 정적 데이터로 표시됩니다.
+
+---
+
+## 기술 스택
+
+| 영역 | 기술 |
+| --- | --- |
+| Framework | Expo SDK 54, React Native |
+| Language | TypeScript |
+| Routing | Expo Router |
+| Styling | NativeWind, Tailwind CSS |
+| Animation | React Native Reanimated |
+| Layout | React Native Safe Area Context |
+| Platform | Android, iOS, Web |
+
+---
+
+## 시작하기
+
+### 패키지 설치
+
+```bash
+npm ci
+```
+
+### 개발 서버 실행
+
+```bash
+npm run start
+```
+
+### 플랫폼별 실행
+
+```bash
+npm run android
+npm run ios
+npm run web
+```
+
+### 코드 검사
+
+```bash
+npm run lint
+npx tsc --noEmit
+```
+
+---
 
 ## 프로젝트 구조
 
 ```text
 src/
-├── app/
-│   ├── _layout.tsx      # 앱 레이아웃과 스플래시
-│   ├── index.tsx        # 바로 읽기 도우미 홈
-│   └── explore.tsx      # 맞춤 훈련 화면
-├── components/          # 공용 UI와 탭
-├── constants/           # 색상·간격 토큰
-└── hooks/               # 테마 훅
+├── app/          Expo Router 페이지와 라우트
+├── features/     기능별 화면과 상태 로직
+├── components/   공통 UI 컴포넌트
+├── constants/    색상과 디자인 상수
+└── hooks/        공통 React Hook
+
+assets/           이미지, 아이콘, 폰트 등 정적 리소스
 ```
 
-## 브랜치, 커밋, PR 컨벤션
+`src/app`은 페이지 진입과 연결을 담당합니다. 실제 화면 UI와 상태 로직은 기능별 `features` 디렉터리에 작성합니다.
 
-### 브랜치 전략
+---
 
-```text
-main       프로덕션/릴리즈 브랜치
-develop    개발 통합 브랜치
-작업 브랜치  이슈 단위 작업 브랜치
-```
+## 코드 작성 기준
 
-일반 기능, 수정, 문서, 설정 작업은 `develop`을 기준으로 브랜치를 만들고 PR을 보냅니다. `main` 머지는 릴리즈 또는 배포 시점에 진행합니다.
+### 파일과 이름
 
-### 브랜치 네이밍
+| 대상 | 규칙 |
+| --- | --- |
+| 일반 TS·TSX 파일 | kebab-case |
+| Expo Router 파일 | `_layout.tsx`, `index.tsx` 등 예약 이름과 URL 경로 이름 사용 |
+| React 컴포넌트 | PascalCase |
+| TypeScript 타입 | PascalCase |
+| 함수와 변수 | camelCase |
+| Custom Hook | `use`로 시작 |
+
+### 구조
+
+- 라우트 파일은 페이지 연결 역할만 담당합니다.
+- 페이지별 UI와 상태 로직은 `features`에 작성합니다.
+- 여러 페이지에서 사용하는 UI는 `components`에 작성합니다.
+- 컴포넌트가 커지면 역할을 기준으로 분리합니다.
+
+### Import와 타입
+
+- 내부 모듈은 `@/` 절대 경로를 사용합니다.
+- TypeScript strict 설정을 유지합니다.
+- 불필요한 `any` 사용을 피합니다.
+- 타입 전용 import는 `import type`을 사용합니다.
+
+### 스타일
+
+- 기본 스타일은 NativeWind의 `className`을 사용합니다.
+- 공통 디자인 상수를 우선 사용합니다.
+- 임의 크기 값은 필요한 경우에만 사용합니다.
+- 웹 화면은 프로젝트의 breakpoint를 기준으로 대응합니다.
+- 플랫폼별 차이가 크면 `.web.tsx` 등의 파일로 분리합니다.
+- 상호작용 요소에는 접근성 속성을 추가합니다.
+
+---
+
+## Git 컨벤션
+
+### 브랜치
+
+| 브랜치 | 용도 |
+| --- | --- |
+| `main` | 배포 및 릴리즈 |
+| `develop` | 개발 내용 통합 |
+| 작업 브랜치 | 이슈 단위 기능 개발 |
+
+작업 브랜치 이름:
 
 ```text
 {type}#{issue-number}/{task-name}
@@ -77,13 +180,12 @@ develop    개발 통합 브랜치
 
 예시:
 
-```bash
+```text
 feat#12/reader-highlight
 fix#15/android-tabs
-chore#1/github-templates
 ```
 
-### 커밋 메시지
+### 커밋 메시지와 PR 제목
 
 ```text
 {type}/#{issue-number}: {작업 요약}
@@ -91,36 +193,20 @@ chore#1/github-templates
 
 예시:
 
-```bash
-git commit -m "feat/#12: 읽기 도우미 화면 추가"
-git commit -m "fix/#15: Android 탭 렌더링 오류 수정"
-git commit -m "docs/#3: README 업데이트"
-```
-
-Type은 다음 기준으로 사용합니다.
-
-| Type     | 의미                                                    |
-| -------- | ------------------------------------------------------- |
-| feat     | 새로운 기능 추가                                        |
-| fix      | 버그 수정                                               |
-| docs     | 문서 수정                                               |
-| style    | 코드 포맷, 세미콜론, 공백 등 동작 변화 없는 스타일 정리 |
-| refactor | 기능 변화 없는 코드 구조 개선                           |
-| test     | 테스트 추가 또는 수정                                   |
-| chore    | 설정, 패키지, 빌드, 레포 관리                           |
-| design   | UI 스타일링, 레이아웃, 디자인 수정                      |
-
-### PR 컨벤션
-
-PR 제목은 커밋 메시지와 같은 형식을 사용합니다.
-
 ```text
-{type}/#{issue-number}: {작업 요약}
+feat/#12: 단어별 하이라이트 화면 구현
+fix/#15: 안드로이드 탭 레이아웃 수정
 ```
 
-PR 작성 시에는 PR 템플릿을 따르고 다음 내용을 명확히 남깁니다.
+| Type | 설명 |
+| --- | --- |
+| `feat` | 새로운 기능 |
+| `fix` | 오류 수정 |
+| `docs` | 문서 수정 |
+| `style` | 코드 형식 수정 |
+| `refactor` | 코드 구조 개선 |
+| `test` | 테스트 추가 및 수정 |
+| `chore` | 설정과 개발 환경 작업 |
+| `design` | UI 디자인 변경 |
 
-- 간단 설명
-- 관련 이슈
-- 작업 내용
-- 확인 사항
+---
