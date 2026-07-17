@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MatchCard } from '@/features/child/game/match/components/match-card';
 import { useMatchGame } from '@/features/child/game/match/hooks/use-match-game';
+import { useRemoteAudioPlayer } from '@/hooks/use-remote-audio-player';
 
 // Fixed tablet canvas (1280x800). Every header/grid element is positioned with
 // explicit `left`/`top` pixel values taken straight from the Figma frame —
@@ -22,6 +23,7 @@ const HOME_LEFT = CANVAS_WIDTH - 85 - HOME_SIZE; // 85dp from the right edge
 export function MatchGameScreen() {
   const router = useRouter();
   const { cards, isLoading, error, totalPairs, matchedPairs, isEvaluating, selectCard } = useMatchGame();
+  const audioPlayer = useRemoteAudioPlayer();
 
   return (
     <SafeAreaView className="flex-1 bg-[#FFFAF2]">
@@ -107,7 +109,10 @@ export function MatchGameScreen() {
                 <MatchCard
                   card={card}
                   disabled={isLoading || isEvaluating}
-                  onPress={() => selectCard(card.cardId)}
+                  onPress={() => {
+                    if (card.kind === 'sound') audioPlayer.play(card.audioUrl);
+                    selectCard(card.cardId);
+                  }}
                 />
               </View>
             );

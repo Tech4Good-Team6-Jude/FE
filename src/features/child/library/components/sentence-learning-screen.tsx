@@ -1,40 +1,121 @@
-import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { fetchStuckSentences } from '@/features/child/library/api/library.service';
+import type { StuckSentence } from '@/features/child/library/api/library.types';
+import { explainStuckSentence, type ExplainResponse } from '@/features/child/library/api/sentence-analysis.service';
 import type {
-  SentenceAnalysisResponse,
+  SentenceAnalysisItem,
   SentenceLessonPresentation,
 } from '@/features/child/library/api/sentence-analysis.types';
 import { SentenceDetailPanel } from '@/features/child/library/components/sentence-detail-panel';
 import { SentenceListCard } from '@/features/child/library/components/sentence-list-card';
-import {
-  mockSentenceAnalysisResponse,
-  mockSentenceLessonPresentation,
-} from '@/features/child/library/data/sentence-analysis.mock';
+import { useRemoteAudioPlayer } from '@/hooks/use-remote-audio-player';
 
-type SentenceLearningScreenProps = {
-  response?: SentenceAnalysisResponse;
-  presentation?: SentenceLessonPresentation[];
-};
+const MAX_LEVEL = 3;
 
-export function SentenceLearningScreen({
-  response = mockSentenceAnalysisResponse,
-  presentation = mockSentenceLessonPresentation,
-}: SentenceLearningScreenProps) {
+function formatExplanation(keyWords: ExplainResponse['keyWords']): string {
+  return keyWords.map((keyWord) => `'${keyWord.word}'는 ${keyWord.meaning}`).join(' ');
+}
+
+export function SentenceLearningScreen() {
   const router = useRouter();
-  const initialSentenceId = presentation.find((item) => item.status === 'active')?.sentenceId ?? response.sentences[0]?.id ?? '';
-  const [selectedSentenceId, setSelectedSentenceId] = useState(initialSentenceId);
+  const { bookId: bookIdParam } = useLocalSearchParams<{ bookId?: string }>();
+  const bookId = Number(bookIdParam);
+  const audioPlayer = useRemoteAudioPlayer();
+
+  const [stuckSentences, setStuckSentences] = useState<StuckSentence[] | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [selectedSentenceId, setSelectedSentenceId] = useState<number | null>(null);
+  const [explainBySentenceId, setExplainBySentenceId] = useState<Map<number, ExplainResponse>>(new Map());
+  const [levelBySentenceId, setLevelBySentenceId] = useState<Map<number, number>>(new Map());
+  const [isReExplaining, setIsReExplaining] = useState(false);
+
+  useEffect(() => {
+    if (!bookId) return;
+    let cancelled = false;
+    fetchStuckSentences(bookId)
+      .then((result) => {
+        if (cancelled) return;
+        setStuckSentences(result);
+        const firstUnresolved = result.find((item) => !item.resolved) ?? result[0];
+        setSelectedSentenceId(firstUnresolved?.stuckSentenceId ?? null);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setLoadError(err instanceof Error ? err : new Error('막힌 문장을 불러오지 못했어요.'));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [bookId]);
+
+  useEffect(() => {
+    if (!selectedSentenceId || explainBySentenceId.has(selectedSentenceId)) return;
+    let cancelled = false;
+    explainStuckSentence(selectedSentenceId, 1)
+      .then((result) => {
+        if (cancelled) return;
+        setExplainBySentenceId((prev) => new Map(prev).set(selectedSentenceId, result));
+        setLevelBySentenceId((prev) => new Map(prev).set(selectedSentenceId, 1));
+      })
+      .catch(() => {
+        // 설명 실패 시 원문 그대로 보여주고 조용히 넘어간다.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedSentenceId, explainBySentenceId]);
+
+  const sentences: SentenceAnalysisItem[] = useMemo(() => {
+    if (!stuckSentences) return [];
+    return stuckSentences.map((stuck) => {
+      const explain = explainBySentenceId.get(stuck.stuckSentenceId);
+      return {
+        id: String(stuck.stuckSentenceId),
+        original: stuck.text,
+        simplified: explain?.explainedText ?? stuck.text,
+        explanation: explain ? formatExplanation(explain.keyWords) : '',
+        audioUrl: explain?.audioUrl ?? null,
+      };
+    });
+  }, [stuckSentences, explainBySentenceId]);
+
+  const presentation: SentenceLessonPresentation[] = useMemo(() => {
+    if (!stuckSentences) return [];
+    const firstUnresolvedIndex = stuckSentences.findIndex((item) => !item.resolved);
+    return stuckSentences.map((stuck, index) => ({
+      sentenceId: String(stuck.stuckSentenceId),
+      status: stuck.resolved ? 'completed' : index === firstUnresolvedIndex ? 'active' : 'locked',
+      tagLabel: stuck.pattern ?? '문장',
+      tagTone: stuck.resolved ? 'success' : index === firstUnresolvedIndex ? 'warning' : 'neutral',
+    }));
+  }, [stuckSentences]);
 
   const presentationBySentenceId = useMemo(
     () => new Map(presentation.map((item) => [item.sentenceId, item])),
     [presentation],
   );
-  const selectedSentence = response.sentences.find((item) => item.id === selectedSentenceId) ?? response.sentences[0];
+  const selectedSentence =
+    sentences.find((item) => item.id === String(selectedSentenceId)) ?? sentences[0];
   const completedCount = presentation.filter((item) => item.status === 'completed').length;
-  const totalCount = response.sentences.length;
+  const totalCount = sentences.length;
   const progressWidth = `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` as `${number}%`;
+
+  const handleReExplain = () => {
+    if (!selectedSentenceId || isReExplaining) return;
+    const currentLevel = levelBySentenceId.get(selectedSentenceId) ?? 1;
+    const nextLevel = Math.min(currentLevel + 1, MAX_LEVEL);
+    setIsReExplaining(true);
+    explainStuckSentence(selectedSentenceId, nextLevel)
+      .then((result) => {
+        setExplainBySentenceId((prev) => new Map(prev).set(selectedSentenceId, result));
+        setLevelBySentenceId((prev) => new Map(prev).set(selectedSentenceId, nextLevel));
+      })
+      .finally(() => setIsReExplaining(false));
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-surface-canvas">
@@ -47,10 +128,13 @@ export function SentenceLearningScreen({
             <Text className="mt-[11px] font-sans text-[36px] font-bold leading-[38px] text-gray-900">
               이 책에서 막힌 문장 {totalCount}개
             </Text>
+            {loadError && (
+              <Text className="mt-[8px] font-sans text-label text-danger">{loadError.message}</Text>
+            )}
           </View>
 
           <View className="mt-[32px] gap-[12px] xl:absolute xl:left-[75px] xl:top-[194px] xl:mt-0 xl:w-[500px]">
-            {response.sentences.map((sentence, index) => {
+            {sentences.map((sentence, index) => {
               const itemPresentation = presentationBySentenceId.get(sentence.id);
               if (!itemPresentation) return null;
 
@@ -60,7 +144,7 @@ export function SentenceLearningScreen({
                   index={index}
                   item={sentence}
                   presentation={itemPresentation}
-                  onPress={() => setSelectedSentenceId(sentence.id)}
+                  onPress={() => setSelectedSentenceId(Number(sentence.id))}
                 />
               );
             })}
@@ -70,7 +154,15 @@ export function SentenceLearningScreen({
             {selectedSentence ? (
               <SentenceDetailPanel
                 sentence={selectedSentence}
-                onUnderstood={() => router.push('/child/library/practice')}
+                isReExplaining={isReExplaining}
+                onPlay={() => audioPlayer.play(selectedSentence.audioUrl)}
+                onReExplain={handleReExplain}
+                onUnderstood={() =>
+                  router.push({
+                    pathname: '/child/library/practice',
+                    params: { bookId: String(bookId), stuckSentenceId: selectedSentence.id },
+                  })
+                }
               />
             ) : (
               <View className="h-[240px] items-center justify-center rounded-[20px] bg-white px-[24px] shadow-analysis-panel xl:w-[614px]">

@@ -1,5 +1,5 @@
-import { ChildRoutePlaceholder } from '@/features/child/components/child-route-placeholder';
+import { ChildRewardsScreen } from '@/features/child/rewards/components/child-rewards-screen';
 
 export default function RewardsScreen() {
-  return <ChildRoutePlaceholder title="리워드" description="열심히 모은 별과 보상을 확인해요." />;
+  return <ChildRewardsScreen />;
 }

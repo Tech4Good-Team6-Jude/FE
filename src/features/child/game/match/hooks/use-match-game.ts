@@ -26,7 +26,7 @@ function buildCardStates(pairs: MatchPair[]): MatchCardState[] {
   return [...topRow, ...bottomRow];
 }
 
-export function useMatchGame(gameId?: string) {
+export function useMatchGame() {
   const [cards, setCards] = useState<MatchCardState[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -39,7 +39,7 @@ export function useMatchGame(gameId?: string) {
     setIsLoading(true);
     setError(null);
 
-    fetchMatchGameDeck(gameId)
+    fetchMatchGameDeck()
       .then((pairs) => {
         if (cancelled) return;
         setCards(buildCardStates(pairs));
@@ -54,7 +54,7 @@ export function useMatchGame(gameId?: string) {
     return () => {
       cancelled = true;
     };
-  }, [gameId]);
+  }, []);
 
   useEffect(
     () => () => {

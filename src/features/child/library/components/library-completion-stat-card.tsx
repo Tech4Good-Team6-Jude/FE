@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import type {
   CompletionStat,
   CompletionStatKind,
-} from '@/features/child/library/data/library-completion.mock';
+} from '@/features/child/library/api/library-completion.types';
 
 const statIconByKind: Record<CompletionStatKind, number> = {
   mastered: require('@/assets/images/child/library/completion/stat-mastered.svg'),

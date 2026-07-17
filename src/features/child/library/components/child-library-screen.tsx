@@ -14,6 +14,9 @@ const homeIcon = require('@/assets/images/child/library/icons/home.svg');
 const arrowRightIcon = require('@/assets/images/child/library/icons/arrow-right.svg');
 
 const CAMERA_OPEN_DELAY = 1175;
+// 목록은 하드코딩이지만, 촬영부터는 실제 API로 이어지도록 실제 백엔드 도서(미운 아기 오리, bookId 5)로 고정 진입한다.
+const DEMO_BOOK_ID = '5';
+const DEMO_PAGE_INDEX = '3';
 
 export function ChildLibraryScreen() {
   const router = useRouter();
@@ -39,7 +42,10 @@ export function ChildLibraryScreen() {
     setIsCameraOpening(true);
     cameraTimerRef.current = setTimeout(() => {
       cameraTimerRef.current = null;
-      router.push('/child/library/capture');
+      router.push({
+        pathname: '/child/library/capture',
+        params: { bookId: DEMO_BOOK_ID, pageIndex: DEMO_PAGE_INDEX },
+      });
     }, CAMERA_OPEN_DELAY);
   };
 

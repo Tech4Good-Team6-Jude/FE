@@ -1,17 +1,27 @@
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const bookPageImage = require('@/assets/images/child/library/capture/ugly-duckling-page.png');
+import { fetchBookPage } from '@/features/child/library/api/library.service';
+
+const fallbackBookPageImage = require('@/assets/images/child/library/capture/ugly-duckling-page.png');
 
 const BLACKOUT_FADE_DURATION = 175;
 
 export function BookCaptureScreen() {
   const router = useRouter();
+  const { bookId: bookIdParam, pageIndex: pageIndexParam } = useLocalSearchParams<{
+    bookId?: string;
+    pageIndex?: string;
+  }>();
+  const bookId = Number(bookIdParam);
+  const pageIndex = Number(pageIndexParam) || 3;
   const curtainOpacity = useRef(new Animated.Value(1)).current;
   const [isCurtainVisible, setIsCurtainVisible] = useState(true);
+  const [pageImageUrl, setPageImageUrl] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
 
   useEffect(() => {
     Animated.timing(curtainOpacity, {
@@ -29,15 +39,42 @@ export function BookCaptureScreen() {
     };
   }, [curtainOpacity]);
 
+  useEffect(() => {
+    if (!bookId) return;
+    let cancelled = false;
+    setLoadError(null);
+    fetchBookPage(bookId, pageIndex)
+      .then((page) => {
+        if (cancelled) return;
+        setPageImageUrl(page.pageImageUrl);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setLoadError(err instanceof Error ? err : new Error('페이지를 불러오지 못했어요.'));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [bookId, pageIndex]);
+
   const handleShutterPress = () => {
-    router.push('/child/library/analysis');
+    router.push({ pathname: '/child/library/analysis', params: { bookId: String(bookId) } });
   };
 
   return (
     <SafeAreaView className="flex-1 bg-black">
       <View className="flex-1 items-center justify-center overflow-hidden bg-black">
         <View className="relative aspect-[8/5] w-full max-w-[1280px] overflow-hidden bg-black">
-          <Image contentFit="fill" source={bookPageImage} style={{ height: '100%', width: '100%' }} />
+          <Image
+            contentFit="fill"
+            source={pageImageUrl ? { uri: pageImageUrl } : fallbackBookPageImage}
+            style={{ height: '100%', width: '100%' }}
+          />
+          {loadError && (
+            <Text className="absolute left-0 right-0 top-1/2 text-center font-sans text-body text-white">
+              {loadError.message}
+            </Text>
+          )}
 
           <View className="absolute inset-x-0 top-0 h-[12.5%] bg-[rgba(25,31,40,0.7)]" />
           <View className="absolute inset-x-0 bottom-0 h-[12.5%] bg-[rgba(25,31,40,0.7)]" />

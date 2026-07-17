@@ -5,9 +5,18 @@ import type { SentenceAnalysisItem } from '@/features/child/library/api/sentence
 type SentenceDetailPanelProps = {
   sentence: SentenceAnalysisItem;
   onUnderstood: () => void;
+  onPlay?: () => void;
+  onReExplain?: () => void;
+  isReExplaining?: boolean;
 };
 
-export function SentenceDetailPanel({ sentence, onUnderstood }: SentenceDetailPanelProps) {
+export function SentenceDetailPanel({
+  sentence,
+  onUnderstood,
+  onPlay,
+  onReExplain,
+  isReExplaining,
+}: SentenceDetailPanelProps) {
   return (
     <View className="min-h-[632px] w-full rounded-[20px] bg-white p-[24px] shadow-analysis-panel xl:h-[632px] xl:w-[614px]">
       <View className="h-[36px] flex-row items-center">
@@ -41,7 +50,8 @@ export function SentenceDetailPanel({ sentence, onUnderstood }: SentenceDetailPa
         <Pressable
           accessibilityLabel="쉬운 문장 듣기"
           accessibilityRole="button"
-          className="h-[52px] w-[52px] items-center justify-center rounded-full bg-mascot-beak active:opacity-80">
+          className="h-[52px] w-[52px] items-center justify-center rounded-full bg-mascot-beak active:opacity-80"
+          onPress={onPlay}>
           <Text className="ml-[3px] font-sans text-[17px] font-bold leading-[20px] text-white">▶</Text>
         </Pressable>
         <View className="ml-[20px] flex-1">
@@ -62,8 +72,12 @@ export function SentenceDetailPanel({ sentence, onUnderstood }: SentenceDetailPa
       </Pressable>
       <Pressable
         accessibilityRole="button"
-        className="mt-[12px] h-[52px] items-center justify-center rounded-[14px] bg-primary-bg active:opacity-80">
-        <Text className="font-sans text-[16px] font-semibold leading-[19px] text-mascot-beak">다시 쉽게 설명해줘</Text>
+        disabled={isReExplaining}
+        className="mt-[12px] h-[52px] items-center justify-center rounded-[14px] bg-primary-bg active:opacity-80"
+        onPress={onReExplain}>
+        <Text className="font-sans text-[16px] font-semibold leading-[19px] text-mascot-beak">
+          {isReExplaining ? '다시 설명하는 중...' : '다시 쉽게 설명해줘'}
+        </Text>
       </Pressable>
     </View>
   );

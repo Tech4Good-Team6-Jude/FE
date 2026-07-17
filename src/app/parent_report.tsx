@@ -28,7 +28,7 @@ export default function ParentReportScreen() {
         <View className="border-b border-gray-200 px-lg pb-lg pt-lg md:w-[280px] md:border-b-0 md:border-r md:pb-2xl">
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.back()}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/role-select'))}
             className="flex-row items-center gap-sm self-start">
             <View className="h-9 w-9 items-center justify-center rounded-full bg-gray-100">
               <Text className="font-sans text-heading font-bold text-gray-900">‹</Text>
